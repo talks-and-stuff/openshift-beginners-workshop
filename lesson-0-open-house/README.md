@@ -6,19 +6,23 @@
 
 0. Welcome everyone and introduce yourself
 1. Introduce the workshop
+   * Not OpenShift operations or provisioning
 2. Show location of materials
 3. Introduce OpenShift (short)
+4. [Developer Sandbox - try OpenShift yourself easily](https://developers.redhat.com/developer-sandbox/get-started).
 4. Talk about the difference between OpenShift and Kubernetes
-5. Open the demo, show URL so that everyone can open it too. (link TBD)
+5. [Open the demo](http://websockets-demo-ttomecek-dev.apps.sandbox.x8i5.p1.openshiftapps.com/), show URL so that everyone can open it too.
+   * [https://bit.ly/3v9RcfA](https://bit.ly/3v9RcfA)
    * Click and fool around
 
 ### Part 2
 
-1. Open webconsole (link TBD)
+1. [Open webconsole](https://console-openshift-console.apps.sandbox.x8i5.p1.openshiftapps.com/topology/ns/ttomecek-dev?view=graph)
    * Show the project (skip most of the webconsole elements - that's the course)
    * Briefly describe pod/deployment, service, route
    * Show metrics/logs
 2. Showcase `oc` binary
+   * "Copy login command"
    * status, get pods, describe, logs
    * login, whoami - explain the authentication mechanism
 
@@ -34,37 +38,31 @@ And then open [0.0.0.0:8081](https://0.0.0.0:8081/) in your browser.
 
 ## Workshop steps
 
-Here are the steps for our specific internal cluster how to reproduce the workshop. I'll update with one that is publicly accessible.
+Once you get your Sandbox cluster provisioned, get the login command and invoke it in your shell.
+
+NEVER SHARE YOUR API TOKEN
+
+```
+$ oc login --token=sha256~$NUMBERS_LETTERS_UNICORNS --server=https://api.sandbox.x8i5.p1.openshiftapps.com:6443
+```
 
 ### Get kubeconfig
 
-First, `curl` the kubeconfig and then expose it:
-```
-export KUBECONFIG=kubeconfig
-```
-
 Do we have access?
 ```
-$ oc get nodes
-NAME                          STATUS    ROLES     AGE       VERSION
-cyborg-4rtft-master-0         Ready     master    9d        v1.22.5+5c84e52
-cyborg-4rtft-master-1         Ready     master    9d        v1.22.5+5c84e52
-cyborg-4rtft-master-2         Ready     master    9d        v1.22.5+5c84e52
-cyborg-4rtft-worker-0-4cbv5   Ready     worker    9d        v1.22.5+5c84e52
-cyborg-4rtft-worker-0-jmz4f   Ready     worker    9d        v1.22.5+5c84e52
-cyborg-4rtft-worker-0-vfx5c   Ready     worker    9d        v1.22.5+5c84e52
+$ oc status
+In project ttomecek-dev on server https://api.sandbox.x8i5.p1.openshiftapps.com:6443
+
+You have no services, deployment configs, or build configs.
+Run 'oc new-app' to create an application.
 
 $ oc whoami
-system:admin
+ttomecek
 ```
 
 Yup!
 
-### New project
-
-```
-$ oc new-project ttomecek-websockets-demo
-```
+Let's use the ttomecek-dev namespace for our app.
 
 ### Time to deploy
 
@@ -72,7 +70,7 @@ $ oc new-project ttomecek-websockets-demo
 $ oc apply -f ./websockets-demo.yml
 deployment.apps/websockets-demo created
 service/websockets-demo created
-route.route.openshift.io/websockets-demo exposed
+route.route.openshift.io/websockets-demo created
 ```
 
 Whoopsie, the image repo was set to private:
