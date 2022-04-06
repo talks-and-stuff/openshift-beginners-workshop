@@ -1,0 +1,15 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: dreamer
+  labels:
+    app: openshift-demo
+spec:
+    restartPolicy: Never 
+    containers:
+    - name: fedora
+      image: fedora:latest
+      command:
+      - sleep
+      args:
+      - "infinity"

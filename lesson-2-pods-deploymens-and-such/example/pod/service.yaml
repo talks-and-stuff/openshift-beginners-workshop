@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: httpbin-svc
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: service-ca-serving-cert
+  labels:
+    app: openshift-demo
+spec:
+  type: ClusterIP
+  ports:
+  - name: https-svc
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: openshift-demo
