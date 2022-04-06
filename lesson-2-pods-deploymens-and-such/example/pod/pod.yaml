@@ -1,0 +1,37 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: httpbin
+  labels:
+    app: openshift-demo
+spec:
+    containers:
+    - name: httpbin
+      image: kennethreitz/httpbin:latest
+      env:
+      - name: GUNICORN_CMD_ARGS
+        value: >-
+          --access-logfile=-
+          --ca-certs=/var/run/configmaps/cacerts/service-ca.crt
+          --certfile=/var/run/secrets/serving-cert/tls.crt
+          --keyfile=/var/run/secrets/serving-cert/tls.key
+      ports:
+      - name: allport
+        containerPort: 80
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+      - name: cacerts
+        mountPath: /var/run/configmaps/cacerts
+        readOnly: true
+      - name: serving-cert
+        mountPath: /var/run/secrets/serving-cert
+    volumes:
+    - name: cacerts
+      configMap:
+        defaultMode: 444
+        name: service-ca
+    - name: serving-cert
+      secret:
+        secretName: service-ca-serving-cert
+        defaultMode: 400
