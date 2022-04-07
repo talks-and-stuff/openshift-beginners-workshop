@@ -62,6 +62,13 @@ ttomecek
 
 Yup!
 
+Ninja way (thanks @stlaz)
+```
+$ oc get users '~' -oyaml
+```
+
+`~` returns currently logged user.
+
 Let's use the ttomecek-dev namespace for our app.
 
 ### Time to deploy
