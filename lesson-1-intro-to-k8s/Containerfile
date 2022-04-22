@@ -1,0 +1,4 @@
+FROM fedora:35
+RUN dnf install -y python3
+USER 48
+CMD ["python3", "-m", "http.server", "--bind", "0.0.0.0", "--directory", "/", "9999"]
