@@ -4,6 +4,11 @@
 
 Welcome to the first lesson of the Red Hat Czech's OpenShift course for beginners.
 
+* Let's introduce ourselves: teachers and organizers.
+  * Please mute your microphone by default.
+  * Ask questions as needed: "Raise hand" button works great for that.
+  * Click that button now if you want to introduce yourself :)
+
 
 ## What will you learn on the course?
 
@@ -45,8 +50,6 @@ Welcome to the first lesson of the Red Hat Czech's OpenShift course for beginner
 
 ## Intro
 
-* Introduce ourselves
-  * Please raise hand if you want to introduce yourself :)
 * The difference between OpenShift and Kubernetes.
 * OpenShift can feel complex and intimidating but don't worry! With some effort it will deliver.
 
@@ -196,7 +199,7 @@ $ curl http://0.0.0.0:9999
 
 ## Cluster access
 
-Link TBD
+Link: https://console-openshift-console.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com
 
 Open the URL and [log in](https://docs.openshift.com/container-platform/4.8/cli_reference/openshift_cli/getting-started-cli.html#cli-logging-in_cli-developer-commands) using the credentials we provided.
 
