@@ -93,6 +93,7 @@ $ cat Containerfile
 FROM fedora:35
 RUN dnf install -y python3
 USER 48
+EXPOSE 9999
 CMD ["python3", "-m", "http.server", "--bind", "0.0.0.0", "--directory", "/", "9999"]
 
 $ podman build --tag http-server .
@@ -199,9 +200,11 @@ $ curl http://0.0.0.0:9999
 
 ## Cluster access
 
-Link: https://console-openshift-console.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com
+If you need a cluster, you can use the Developer Sandbox mentioned above. For
+basic experiments with vanilla Kubernetes, have a look at
+[kind](https://kind.sigs.k8s.io/).
 
-Open the URL and [log in](https://docs.openshift.com/container-platform/4.8/cli_reference/openshift_cli/getting-started-cli.html#cli-logging-in_cli-developer-commands) using the credentials we provided.
+Open a URL to the cluster and [log in](https://docs.openshift.com/container-platform/4.8/cli_reference/openshift_cli/getting-started-cli.html#cli-logging-in_cli-developer-commands) using the credentials we provided.
 
 Once logged in...
 
@@ -215,7 +218,6 @@ Take your time browsing OpenShift's Web console. Just an FYI, [Kubernetes has a 
 ### Web console
 
 You just saw it :)
-
 
 ### [CLI](https://docs.openshift.com/container-platform/4.8/cli_reference/openshift_cli/getting-started-cli.html#cli-getting-started)
 
@@ -335,3 +337,105 @@ DESCRIPTION:
      optional to allow higher level config management to default or override
      container images in workload controllers like Deployments and StatefulSets.
 ```
+
+### Getting our http-server into OpenShift
+
+Thanks to our wonderful attendees, we figured out a follow-up to the container exercise above.
+
+The question on the course was: how do we get the "http-server" container image to our OpenShift cluster and run it there?
+
+
+#### Set up a new project
+
+We need a space in our cluster where the container will run. So let's create a new project for us.
+
+Please select a descriptive name so it's clear for you what's running inside:
+```
+$ oc new-project lesson1-http-server
+```
+
+#### Upload the image
+
+Next, we need to bring our local container image to the cluster. There are
+several ways how to do such a thing. Let's push the image to a registry within
+the cluster. We do that for sake of this demonstration, the registry should be
+used as an image cache.
+
+(The following snippets are just examples: the cluster is not deployed any more)
+
+So, let's find out the location of the cluster's rergistry:
+```
+$ oc registry info
+default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com
+```
+
+`oc` command is so helpful that it can also log us in (we need to be authenticated to perform the push):
+```
+$ oc registry login
+Saved credentials for default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com
+```
+
+`podman` will be able to push the image now. But before we can run that command, we need to tag our local `http-server` image:
+```
+$ podman tag \
+    http-server \
+    default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server
+```
+
+Now that we have the image tagged properly, we can push it to the registry:
+```
+$ podman push default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server
+Getting image source signatures
+Copying blob 95aeca5770b1 done  
+Copying blob 25ac1b552b4c done  
+Copying config bdd326fe09 done  
+Writing manifest to image destination
+Storing signatures
+```
+
+
+#### Run it
+
+OpenShift's `oc` client has a neat command to run a selected container image:
+```
+$ oc new-app default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server
+--> Found container image bdd326f (5 days old) from default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com for "default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server"
+
+    * An image stream tag will be created as "http-server:latest" that will track this image
+
+--> Creating resources ...
+    deployment.apps "http-server" created
+--> Success
+    Run 'oc status' to view your app.
+```
+
+Our http-server is now running but we cannot access it because the application is not exposed. Time to fix that.
+
+
+#### Expose to public
+
+```
+$ oc expose --port 9999 deployment.apps/http-server
+service/websockets-demo exposed
+```
+
+We have exposed it within our cluster now. We need to run one more expose to make it available to the public:
+```
+$ oc expose service/http-server
+route.route.openshift.io/http-server exposed
+```
+
+Here's our http-server:
+```
+$ oc get route
+NAME          HOST/PORT                                                               PATH   SERVICES       PORT  TERMINATION  WILDCARD
+http-server   http-server-ttomecek-stage.apps.sandbox.x8i5.p1.openshiftapps.com              http-server    9999               None
+```
+
+The host/port is the location where you can connect and check it out.
+
+
+### But how does that work?
+
+Join us on lesson 2 to find out :)
+
