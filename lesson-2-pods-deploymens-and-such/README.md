@@ -57,7 +57,7 @@
 
 $ oc apply -f example/pod/pod.yaml
 $ oc apply -f example/pod/
-$ oc port-forward local:target
+$ oc port-forward podname local:target
 
 ---
 
