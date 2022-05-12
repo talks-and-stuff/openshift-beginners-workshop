@@ -97,7 +97,7 @@ $ curl https://httpbin-svc.<nsname>.svc.cluster.local:8080/get
 
 ## Route Demo
 
-- <connecting from laptops to the service>
+- connecting from laptops to the service
 
 ---
 
