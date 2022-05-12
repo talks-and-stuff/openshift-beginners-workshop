@@ -26,6 +26,7 @@ spec:
         readOnly: true
       - name: serving-cert
         mountPath: /var/run/secrets/serving-cert
+        readOnly: true
     volumes:
     - name: cacerts
       configMap:
