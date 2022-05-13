@@ -172,6 +172,7 @@ $ oc scale deployment httpbin-deployment --replicas 2
 - [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment:)
 - [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
 - [Resources and Limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes)
+- see [QuestionsAnswers.md](QuestionsAnswers.md) file for questions asked during the lecture
 
 ---
 
