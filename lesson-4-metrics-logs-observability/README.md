@@ -105,7 +105,7 @@ Would scaling the application horizontally improve RPS?
 
 Would adding more resources to the DB pod improve RPS?
 
-    oc -n perfscale-demo-app set resources dc/perfscale-demo-app --limits=cpu=500m,memory=512Mi --requests=cpu=500m,memory=512Mi
+    oc -n perfscale-demo-app set resources dc/postgresql --limits=cpu=500m,memory=512Mi --requests=cpu=500m,memory=512Mi
     watch oc -n perfscale-demo-app get pods
 
 Can we scale indefinetelly?
