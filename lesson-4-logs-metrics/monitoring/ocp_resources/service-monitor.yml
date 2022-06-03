@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: prometheus-example-monitor
+  name: prometheus-example-monitor
+spec:
+  endpoints:
+  - interval: 30s
+    port: 8080-tcp
+    scheme: http
+  selector:
+    matchLabels:
+      app: ed-app
