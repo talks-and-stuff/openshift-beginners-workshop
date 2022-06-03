@@ -24,7 +24,7 @@ Steps:
 - View container logs
   - `podman logs -f logtest`
   - Try also `podman logs --latest`
-- Make requests to view logs
+- Make requests to generate logs
   - `curl localhost:8080`
 - Check how logs are stored, explore directory 
   - Find logs location in `podman inspect --latest| less`
@@ -35,15 +35,16 @@ Steps:
 
 Things to learn in this section:
 - How Logging stack in OpenShift Works
-- How to deploy logging stack in OpenShift
+- How to install logging stack in OpenShift
 - How to observe logs of application running in OpenShift
 
 Resources:
 - [Presentation](./src/openshift-logging-metrics-presentation.pdf)
 
 Steps:
-- Deploy logging stack (instructor walkthrough)
+- [Install logging stack](https://docs.openshift.com/container-platform/4.10/logging/cluster-logging-deploying.html) (instructor walkthrough)
 - Deploy and expose application from container image `quay.io/rhsacz/ed-app:0.3.0`
+  - Application code is [located at GitHub](https://github.com/jwerak/ed-app/tree/main/src)
 - Open Kibana UI and view application logs
 
 ## Metrics
@@ -65,5 +66,6 @@ Resources:
 
 Steps:
 - Walk through documentation
-- Observe metrics exposed by deployed application
-- View metrics in Grafana
+- [Create Service Monitor](https://docs.openshift.com/container-platform/4.10/monitoring/managing-metrics.html#specifying-how-a-service-is-monitored_managing-metrics) to pull custom app metrics
+- [Observe metrics](https://docs.openshift.com/container-platform/4.10/applications/odc-monitoring-project-and-application-metrics-using-developer-perspective.html#monitoring-project-and-application-metrics-using-developer-perspective) exposed by deployed application 
+- View metrics in OpenShift Console
