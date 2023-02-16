@@ -7,26 +7,28 @@ Welcome to the first lesson of the Red Hat Czech's OpenShift course for beginner
 * Let's introduce ourselves: teachers and organizers.
   * Please mute your microphone by default.
   * Ask questions as needed: "Raise hand" button works great for that.
-  * Click that button now if you want to introduce yourself :)
+  * In person, you can raise your real hand :hand:
+  * Let's make a round of introdcutions: why are here and what you expect to learn?
 
 
 ## What will you learn on the course?
 
-* Kubernetes and how to use it.
+* Kubernetes: what it is and how to use it.
 * OpenShift.
 * Web console, `oc`, `kubectl`.
 * Basics of containerization.
-* The most common objects and resources, and their purpose.
+* The most common objects, resources, and their purpose.
 * Deploying applications into a cluster.
 * Operating your application.
 * Observability.
 * Advanced concepts.
 
+
 ## Outside of our scope
 
 * Installation of a cluster.
 * Helping you with problems during the course on non-Red Hat operating systems.
-* Basically any troubleshooting will be hard to do virtually, sorry!
+* Provide support outside of this course. We are happy to help here.
 * Serving coffee.
 
 
@@ -39,7 +41,7 @@ Welcome to the first lesson of the Red Hat Czech's OpenShift course for beginner
 * Instructions: [openhouse.redhat.com/cz/openshift](https://openhouse.redhat.com/cz/openshift/)
 
 
-## Today
+## Lesson 1 agenda
 
 * Basics of k8s and OpenShift.
 * Web console, `oc`.
@@ -50,11 +52,12 @@ Welcome to the first lesson of the Red Hat Czech's OpenShift course for beginner
 
 ## Intro
 
-* The difference between OpenShift and Kubernetes.
-* OpenShift can feel complex and intimidating but don't worry! With some effort it will deliver.
+* The difference between [OpenShift](https://docs.openshift.com/) and [Kubernetes](https://github.com/kubernetes/kubernetes).
+* OpenShift can feel complex and intimidating but don't worry, at the end of this course, you'll be comfortable with it.
 
 
 ### Motivation
+
 Separate host OS from the app OS.
 
 ![Traditional → Containerized](https://d33wubrfki0l68.cloudfront.net/26a177ede4d7b032362289c6fccd448fc4a91174/eb693/images/docs/container_evolution.svg)
@@ -85,39 +88,40 @@ THE building block of Kubernetes.
 
 Not these... C'mon!
 
-And we're tired of the talking, let's finally do something!
 
-Okay then, let's build a container image.
+### Demo
+
+Let's build a container image.
 ```
 $ cat Containerfile
-FROM fedora:35
+FROM fedora:37
 RUN dnf install -y python3
 USER 48
 EXPOSE 9999
 CMD ["python3", "-m", "http.server", "--bind", "0.0.0.0", "--directory", "/", "9999"]
 
 $ podman build --tag http-server .
-STEP 1/4: FROM fedora:35
-STEP 2/4: RUN dnf install -y python3
-Fedora 35 - x86_64                              3.9 MB/s |  79 MB     00:20    
-Fedora 35 openh264 (From Cisco) - x86_64        1.5 kB/s | 2.5 kB     00:01    
-Fedora Modular 35 - x86_64                      3.1 MB/s | 3.3 MB     00:01    
-Fedora 35 - x86_64 - Updates                    4.5 MB/s |  29 MB     00:06    
-Fedora Modular 35 - x86_64 - Updates            2.8 MB/s | 2.9 MB     00:01    
-Fedora 35 - x86_64 - Test Updates               2.6 MB/s | 7.4 MB     00:02    
-Fedora Modular 35 - x86_64 - Test Updates       467 kB/s | 559 kB     00:01    
-Package python3-3.10.0~rc2-1.fc35.x86_64 is already installed.
+STEP 1/5: FROM fedora:37
+STEP 2/5: RUN dnf install -y python3
+Fedora 37 - x86_64                              4.3 MB/s |  82 MB     00:18    
+Fedora 37 openh264 (From Cisco) - x86_64        3.0 kB/s | 2.5 kB     00:00    
+Fedora Modular 37 - x86_64                      3.0 MB/s | 3.8 MB     00:01    
+Fedora 37 - x86_64 - Updates                    2.1 MB/s |  23 MB     00:11    
+Fedora Modular 37 - x86_64 - Updates            1.8 MB/s | 2.9 MB     00:01    
+Package python3-3.11.0-1.fc37.x86_64 is already installed.
 Dependencies resolved.
 Nothing to do.
 Complete!
---> dbdfdd757c0
-STEP 3/4: USER 48
---> 2c1e273cec3
-STEP 4/4: CMD ["python3", "-m", "http.server", "--bind", "0.0.0.0", "--directory", "/", "9999"]
+--> d2f9687c7f9
+STEP 3/5: USER 4848
+--> ee10a2a913d
+STEP 4/5: EXPOSE 9999
+--> 65e13674959
+STEP 5/5: CMD ["python3", "-m", "http.server", "--bind", "0.0.0.0", "--directory", "/", "9999"]
 COMMIT http-server
---> bdd326fe09d
+--> e868be0feb3
 Successfully tagged localhost/http-server:latest
-bdd326fe09d41a497a2b74082aeb6c609b7da7dc7a6b8d749e2d4f53a19e9ff9
+e868be0feb33970b97b8fd8d96cc48d045c374a20f1b8634e039cd6ccbb01b49
 ```
 
 And now let's run a container:
@@ -145,7 +149,7 @@ Anyway, what's wrong up there? And what the heck are we actually trying to do?
 2. The HTTP content is being served within the container and that's not exposed
    to all network interfaces.
 3. The commands above utilize rootless podman containers and those [don't get
-   their own IP address](https://podman.io/getting-started/network).
+   their own IP address](https://github.com/containers/podman/blob/main/docs/tutorials/basic_networking.md).
 4. [Podman](https://podman.io/) is a container manager (actually a pod manager
    😁) that doesn't require any service or a daemon to run - it's just a tool.
 4. The resolution is to expose the HTTP server within the container to all the
@@ -157,16 +161,17 @@ $ podman run -p 9999:9999 http-server
 
 ```
 $ curl http://0.0.0.0:9999
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
 <title>Directory listing for /</title>
 </head>
 <body>
 <h1>Directory listing for /</h1>
 <hr>
 <ul>
+<li><a href="afs/">afs/</a></li>
 <li><a href="bin/">bin@</a></li>
 <li><a href="boot/">boot/</a></li>
 <li><a href="dev/">dev/</a></li>
@@ -193,8 +198,14 @@ $ curl http://0.0.0.0:9999
 </html>
 ```
 
+And in the log of the container:
 ```
 10.0.2.100 - - [22/Apr/2022 08:23:05] "GET / HTTP/1.1" 200 -
+```
+
+Will this work?
+```
+$ curl http://localhost:9999
 ```
 
 
@@ -217,7 +228,7 @@ Take your time browsing OpenShift's Web console. Just an FYI, [Kubernetes has a 
 
 ### Web console
 
-You just saw it :)
+![Empty webconsole](/lesson-1-intro-to-k8s/webconsole-empty.png)
 
 ### [CLI](https://docs.openshift.com/container-platform/4.8/cli_reference/openshift_cli/getting-started-cli.html#cli-getting-started)
 
@@ -230,6 +241,8 @@ $ oc
 You can [download the `oc` binary](https://access.redhat.com/downloads/content/290) from Red Hat's customer portal.
 
 You can also use the [OKD](https://okd.io/) binary and download it from [OKD's releases](https://github.com/openshift/okd/releases).
+
+Unfortunately, `oc` is not packaged in Fedora Linux.
 
 
 #### CLI Basics
@@ -257,6 +270,14 @@ These are the N most-used subcommands:
 
 We have the basics, let's try this out!
 
+Let's connect our local `oc` with our cluster. Click on your name top-right and "Copy login command".
+```
+$ oc login --token=$NEVER_SHARE_THIS_ESPECIALLY_POST_IT_PUBLICLY --server=https://api.sandbox-m2.ll9k.p1.openshiftapps.com:6443
+```
+
+**Bonus**: run the second `curl` command.
+
+
 ### Resources
 
 [A snippet from k8s' API description](https://kubernetes.io/docs/reference/kubernetes-api/):
@@ -270,18 +291,14 @@ We have the basics, let's try this out!
 Let's use `pod` as a resource example:
 ```
 $ oc get pods
-NAME                               READY   STATUS        RESTARTS   AGE
-websockets-demo-649b446d8c-qfdng   0/1     Terminating   0          6s
+No resources found in ttomecek-dev namespace.
 ```
 
-(we can use a pod definition from the first lesson)
+With this command, we ask OpenShift to show us all pods (whatever that is) in
+the current namespace (also that).
 
-After a while and fixing a root cause, we have a running pod:
-```
-$ oc get pods
-NAME                               READY   STATUS    RESTARTS   AGE
-websockets-demo-649b446d8c-2s6jc   1/1     Running   0          2m28s
-```
+And there are none, because the cluster is empty (kind of).
+
 
 ### `oc explain`
 
@@ -340,9 +357,10 @@ DESCRIPTION:
 
 ### Getting our http-server into OpenShift
 
-Thanks to our wonderful attendees, we figured out a follow-up to the container exercise above.
+Thanks to our wonderful attendees from the run in 2022, we have a followup.
 
-The question on the course was: how do we get the "http-server" container image to our OpenShift cluster and run it there?
+The question on the course was: how do we get the "http-server" container image
+to our OpenShift cluster and run it there?
 
 
 #### Set up a new project
@@ -357,85 +375,82 @@ $ oc new-project lesson1-http-server
 #### Upload the image
 
 Next, we need to bring our local container image to the cluster. There are
-several ways how to do such a thing. Let's push the image to a registry within
-the cluster. We do that for sake of this demonstration, the registry should be
-used as an image cache.
-
-(The following snippets are just examples: the cluster is not deployed any more)
-
-So, let's find out the location of the cluster's rergistry:
+several ways how to do such a thing. Let's push the image to [quay.io
+registry](https://quay.io/).
 ```
-$ oc registry info
-default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com
+$ podman login quay.io
 ```
 
-`oc` command is so helpful that it can also log us in (we need to be authenticated to perform the push):
+We need to tag the image properly and push it to the registry.
 ```
-$ oc registry login
-Saved credentials for default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com
-```
-
-`podman` will be able to push the image now. But before we can run that command, we need to tag our local `http-server` image:
-```
-$ podman tag \
-    http-server \
-    default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server
+$ podman tag http-server quay.io/tomastomecek/http-server
 ```
 
 Now that we have the image tagged properly, we can push it to the registry:
 ```
-$ podman push default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server
+$ podman push quay.io/tomastomecek/http-server
 Getting image source signatures
-Copying blob 95aeca5770b1 done  
-Copying blob 25ac1b552b4c done  
-Copying config bdd326fe09 done  
+Copying blob 0975862b2056 done  
+Copying blob f71d895171a4 skipped: already exists  
+Copying config e868be0feb done  
 Writing manifest to image destination
 Storing signatures
 ```
 
 
-#### Run it
+#### Run `http-server` in OpenShift
 
-OpenShift's `oc` client has a neat command to run a selected container image:
+OpenShift's `oc` client has a fascinating command to run a selected container
+image and set up a lot of things automatically.
+
+Make sure the Quay repository is public, otherwise OpenShift won't be able to
+access it.
 ```
-$ oc new-app default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server
---> Found container image bdd326f (5 days old) from default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com for "default-route-openshift-image-registry.apps.cluster-4svlt.4svlt.sandbox1027.opentlc.com/ttomecek-lesson1/http-server"
+$ oc new-app quay.io/tomastomecek/http-server
+--> Found container image e868be0 (29 hours old) from quay.io for "quay.io/tomastomecek/http-server"
 
     * An image stream tag will be created as "http-server:latest" that will track this image
 
 --> Creating resources ...
+    imagestream.image.openshift.io "http-server" created
     deployment.apps "http-server" created
+    service "http-server" created
 --> Success
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose service/http-server' 
     Run 'oc status' to view your app.
 ```
 
-Our http-server is now running but we cannot access it because the application is not exposed. Time to fix that.
+Let's run the `get pods` command again:
+```
+NAME                           READY   STATUS    RESTARTS   AGE
+http-server-5cd8885f9b-6gxdq   1/1     Running   0          72s
+```
+
+Our http-server is now running but we cannot access it because the application is not exposed to the public.
 
 
 #### Expose to public
 
 ```
-$ oc expose --port 9999 deployment.apps/http-server
-service/websockets-demo exposed
-```
-
-We have exposed it within our cluster now. We need to run one more expose to make it available to the public:
-```
-$ oc expose service/http-server
+$ oc expose --port 9999 service/http-server
 route.route.openshift.io/http-server exposed
 ```
 
+OpenShift will do its own internal "magic" to make your http-server accessible to the public.
+
+
 Here's our http-server:
 ```
-$ oc get route
-NAME          HOST/PORT                                                               PATH   SERVICES       PORT  TERMINATION  WILDCARD
-http-server   http-server-ttomecek-stage.apps.sandbox.x8i5.p1.openshiftapps.com              http-server    9999               None
+$ oc get route/http-server
+NAME          HOST/PORT                                                            PATH   SERVICES      PORT   TERMINATION   WILDCARD
+http-server   http-server-ttomecek-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com          http-server   9999                 None
 ```
 
 The host/port is the location where you can connect and check it out.
 
 
-### But how does that work?
+### How does that work? I need to know more!
 
 Join us on lesson 2 to find out :)
 
