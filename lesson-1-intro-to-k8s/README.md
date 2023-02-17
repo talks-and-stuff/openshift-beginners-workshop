@@ -8,7 +8,6 @@ Welcome to the first lesson of the Red Hat Czech's OpenShift course for beginner
   * Please mute your microphone by default.
   * Ask questions as needed: "Raise hand" button works great for that.
   * In person, you can raise your real hand :hand:
-  * Let's make a round of introdcutions: why are here and what you expect to learn?
 
 
 ## What will you learn on the course?
