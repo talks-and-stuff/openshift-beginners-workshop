@@ -4,10 +4,10 @@
 
 Welcome to the first lesson of the Red Hat Czech's OpenShift course for beginners.
 
-* Let's introduce ourselves: teachers and organizers.
-  * Please mute your microphone by default.
+* Let's introduce ourselves: teachers, organizers, and charming assistants.
   * Ask questions as needed: "Raise hand" button works great for that.
   * In person, you can raise your real hand :hand:
+  * 🟥 🟨 🟩
 
 
 ## What will you learn on the course?
