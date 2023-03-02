@@ -81,27 +81,27 @@ What is handy to know:
 * Sequential vs. parallel
 * Throughput vs. latency
 * Horizontal vs. vertical scaling
-* Understand pod resource **requests** and **limits** (quality of service for testng vs. prod settings)
+* Understand pod resource **requests** and **limits** (quality of service for testng vs. production settings)
 
 ![Percentiles](src/percentile.svg "Percentiles")
 
 Preparing for testing:
 
-* Do we have knowledge and/or some diagrams on how the application works and how it interacts with the rest of the ecosystem
-* How to deploy the application into non-production environment for the testing
-* What (perf and scale related) risks the application/deployment have
-* What scenario would be testable from a performance point of view
+* Do we have knowledge and/or some diagrams on how the application works and how it interacts with the rest of the ecosystem?
+* How to deploy the application into non-production environment for the testing?
+* What (performance and scale related) risks the application/deployment has?
+* What scenario would be testable from a performance point of view?
   * What if you have to pick one, which one?
-* Any existing perf&scale results
-* What are the perf&scale expectations/projections
+* Are there some existing perf&scale results?
+* What are the perf&scale expectations/projections?
 
 ### Example application
 
 How it works:
 
-Name: Banking-like™ application
+Name: *Banking-like™ application*
 
-* Manage users and watch their money balance
+* Manage users and their account balance
 * Add money transfer transactions
 * Search users by name, address, email…
 
@@ -123,12 +123,12 @@ Source code: <https://github.com/jhutar/perfscale-demo-app/blob/main/deploy.yaml
 
 Risks:
 
-* How many API requests it can handle
-* Is there a difference in read/write operations
-* Will performance drop with more entities in the DB
-* What resources are we going to need to run the application
-* What aspects of the application to monitor
-* Can UI handle the traffic
+* How many concurrent API requests it can handle?
+* Is there any difference between read and write operations?
+* Will performance drop with more entities in the DB?
+* What resources are we going to need to run the application?
+* What aspects of the application to monitor?
+* Can UI handle the traffic?
 
 Scenario:
 
@@ -144,7 +144,7 @@ Expectations:
 
 * In peaks 100 users concurrently
 * Plan to grow to 1000 concurrent users next year, double it year after…
-* Every user does 3 transactions every day
+* Every user does 3 transactions per day
 * Expected latency 99.9th percentile below 100 ms
 
 ### Demo?
