@@ -12,9 +12,9 @@
     - [Expected output from perf&scale tests](#expected-output-from-perfscale-tests)
 
 
-## Logging 
+## Logging
 
-### Containers logging 
+### Containers logging
 
 Things to learn in this section:
 - How should containers log and why?
@@ -24,14 +24,14 @@ Things to learn in this section:
 Steps:
 - Start container and watch logs
   - `podman run -it -p 8080:8080 --rm --name logtest -t quay.io/rhsacz/ed-app:0.3.0`
-- Start Container in background 
+- Start Container in background
   - `podman run -d -p 8080:8080 --rm --log-driver k8s-file  --name logtest -t quay.io/rhsacz/ed-app:0.3.0`
 - View container logs
   - `podman logs -f logtest`
   - Try also `podman logs --latest`
 - Make requests to view logs
   - `curl localhost:8080`
-- Check how logs are stored, explore directory 
+- Check how logs are stored, explore directory
   - Find logs location in `podman inspect --latest| less`
   - View logs in k8s file
     - `tail -f $(podman inspect --latest --format '{{ .HostConfig.LogConfig.Path }}')`
