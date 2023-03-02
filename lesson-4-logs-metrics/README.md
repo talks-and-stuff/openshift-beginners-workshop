@@ -73,6 +73,10 @@ Steps:
 - Observe metrics exposed by deployed application
 - View metrics in Grafana
 
+Some example PromQL queries:
+- CPU for pod: `sum(pod:container_cpu_usage:sum{namespace='{{ namespace }}',pod=~'{{ pod }}-[0-9a-f]+-.*'})`
+- Memory used by pod: `sum(container_memory_usage_bytes{namespace='{{ namespace }}', pod=~'{{ pod }}-[0-9a-f]+-.*', container!='POD', container!=''})`
+
 ## Microservices Perf&Scale testing
 
 What is handy to know:
