@@ -1,5 +1,5 @@
 FROM fedora:latest
-RUN dnf install -y python3
+RUN dnf install -y python3 && dnf clean all
 USER 4848
 EXPOSE 9999
 CMD ["python3", "-m", "http.server", "--bind", "0.0.0.0", "--directory", "/", "9999"]
