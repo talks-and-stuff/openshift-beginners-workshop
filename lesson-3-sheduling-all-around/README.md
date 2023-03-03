@@ -49,6 +49,7 @@ spec:
   containers:
   - name: security-s1
     image: docker.io/ocpqe/hello-pod
+  affinity:
     podAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
@@ -57,6 +58,7 @@ spec:
             operator: In
             values:
             - S1
+        topologyKey: kubernetes.io/hostname
 ```
 
 - p3 - which has antiAffinity to NOT be run on same node as "p1" using the selector be scheduled on same node as the pods with label "security" set to "S1"
