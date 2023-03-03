@@ -59,7 +59,7 @@ spec:
             - S1
 ```
 
-- p2 - which has antiAffinity to NOT be run on same node as "p1" using the selector be scheduled on same node as the pods with label "security" set to "S1"
+- p3 - which has antiAffinity to NOT be run on same node as "p1" using the selector be scheduled on same node as the pods with label "security" set to "S1"
 
 ``` yaml
 apiVersion: v1
