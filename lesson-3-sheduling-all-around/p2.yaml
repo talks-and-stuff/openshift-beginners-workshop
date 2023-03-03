@@ -8,6 +8,7 @@ spec:
   containers:
   - name: security-s1
     image: docker.io/ocpqe/hello-pod
+  affinity:
     podAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
@@ -16,5 +17,4 @@ spec:
             operator: In
             values:
             - S1
-
-
+        topologyKey: kubernetes.io/hostname
