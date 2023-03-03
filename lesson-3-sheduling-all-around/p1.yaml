@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p1
+  labels:
+    security: S1
+spec:
+  containers:
+  - name: security-s1
+    image: docker.io/ocpqe/hello-pod
